@@ -25,7 +25,7 @@ sealed trait Effect {
     def affect(table: Table) : Table
 }
 
-case class EntersTheBattlefield(creature: Creature, player: Player) extends Effect {
+case class EntersTheBattlefield(creature: Creature) extends Effect {
     // FIXME put creature on battlefield
     def affect(table: Table) = table
 }
@@ -36,7 +36,6 @@ case class CounteredSpell(countered: SpellOrAbility) extends Effect {
 }
 
 sealed trait SpellOrAbility {
-    val player: Player
     def resolve: Effect
 }
 
@@ -44,10 +43,10 @@ trait SingleTargetSpell[T] extends SpellOrAbility {
     val target: T
 }
 
-case class CreatureSpell(player: Player, creature: Creature) extends SpellOrAbility {
-    def resolve = new EntersTheBattlefield(creature, player)
+case class CreatureSpell(creature: Creature) extends SpellOrAbility {
+    def resolve = new EntersTheBattlefield(creature)
 }
 
-case class CounterSpell(player: Player, target: SpellOrAbility) extends SingleTargetSpell[SpellOrAbility] {
+case class CounterSpell(target: SpellOrAbility) extends SingleTargetSpell[SpellOrAbility] {
     def resolve = new CounteredSpell(target)
 }
