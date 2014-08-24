@@ -39,14 +39,12 @@ sealed trait SpellOrAbility {
     def resolve: Effect
 }
 
-trait SingleTargetSpell[T] extends SpellOrAbility {
-    val target: T
+abstract class SingleTargetSpell[T](target: T, resolveFun: (T) => Effect) extends SpellOrAbility {
+    def resolve = resolveFun(target)
 }
 
 case class CreatureSpell(creature: Creature) extends SpellOrAbility {
     def resolve = new EntersTheBattlefield(creature)
 }
 
-case class CounterSpell(target: SpellOrAbility) extends SingleTargetSpell[SpellOrAbility] {
-    def resolve = new CounteredSpell(target)
-}
+case class CounterSpell(target: SpellOrAbility) extends SingleTargetSpell[SpellOrAbility](target, new CounteredSpell(_))
