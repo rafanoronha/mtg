@@ -1,8 +1,11 @@
 case class Player
 
-sealed trait Permanent
+abstract class Permanent(effects: Seq[Effect])
 
-case class Creature extends Permanent
+case class Creature(power: Int, toughness: Int, effects: Seq[Effect]) extends Permanent(effects) {
+    def mayAttack = true
+    def mayBlock = true    
+}
 
 case class Battlefield(val creatures: Seq[Creature])
 
