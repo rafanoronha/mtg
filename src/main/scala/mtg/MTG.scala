@@ -14,6 +14,7 @@ trait PermanentProperty
 
 trait CantAttack extends PermanentProperty
 trait CantBlock extends PermanentProperty
+trait Flying extends PermanentProperty
 
 case class AdditionalPower(value: Int) extends PermanentProperty
 
